@@ -31,6 +31,7 @@
 /* Begin PBXFileReference section */
 		530158D12CD66C3B0092F6BA /* AVFAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFAudio.framework; path = System/Library/Frameworks/AVFAudio.framework; sourceTree = SDKROOT; };
 		530158D32CD66C440092F6BA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		530159222CDC88550092F6BA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		53987B042CD35C690082080F /* GuitarTuner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GuitarTuner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53987B172CD35C6B0082080F /* GuitarTunerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GuitarTunerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53987B212CD35C6B0082080F /* GuitarTunerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GuitarTunerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +94,7 @@
 		53987AFB2CD35C690082080F = {
 			isa = PBXGroup;
 			children = (
+				530159222CDC88550092F6BA /* README.md */,
 				53987B062CD35C690082080F /* GuitarTuner */,
 				53987B1A2CD35C6B0082080F /* GuitarTunerTests */,
 				53987B242CD35C6B0082080F /* GuitarTunerUITests */,
