@@ -23,7 +23,7 @@ class ToneEngine{
         self.volume = 0.0
     }
     
-    func startCapture(callback:@escaping(EngineState, Float, Float)->Void)-> Bool{
+    func startCapture(startFreq:Float, endFreq:Float, volumeLevel:Float, callback:@escaping(EngineState, Float, Float)->Void)-> Bool{
         audioEngine.stop()
         audioEngine.reset()
         let inputNode = audioEngine.inputNode
@@ -32,12 +32,13 @@ class ToneEngine{
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { buffer, _ in
             if buffer.frameLength > 0 {
                 logger.logWithDetails("Got something from audio buffer")
-                self.processAudioBuffer(buffer: buffer)
+                self.processAudioBuffer(startFreq:startFreq, endFreq:endFreq, volumeLevel:volumeLevel, buffer: buffer)
                 if(self.frequence != 0.0){
                     callback(EngineState.AudioFrequencyDone, self.frequence, self.volume)
                     return
                 }else{
                     callback(EngineState.AudioFrequencyAnalyseError, self.frequence, self.volume)
+                    return
                 }
                
             }else{
@@ -63,11 +64,20 @@ class ToneEngine{
     }
     
     
-    private func processAudioBuffer(buffer: AVAudioPCMBuffer){
+    private func processAudioBuffer(startFreq:Float, endFreq:Float, volumeLevel:Float, buffer: AVAudioPCMBuffer){
         //process audio here.
-        let frequence = analyzeFrequence(buffer: buffer)
         let volume = analyseAudioVolume(buffer: buffer)
-        logger.logWithDetails("Got analyzed audio volume:\(volume) frequence: \(frequence)")
+        if(volume < volumeLevel){
+            logger.logWithDetails("Got audio volume level: \(volume) less than volume level: \(volumeLevel)")
+            return
+        }
+        let frequence = analyzeFrequence(buffer: buffer)
+        if(frequence < startFreq || frequence > endFreq){
+            logger.logWithDetails("Got invalid frequence: \(frequence), less than \(startFreq) and large than \(endFreq)")
+            return
+        }
+      
+        logger.logWithDetails("Got analyzed audio frequence: \(frequence) volume:\(volume) ")
         self.frequence = frequence
         self.volume = volume
 

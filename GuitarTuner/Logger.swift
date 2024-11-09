@@ -13,7 +13,7 @@ extension Logger {
 
     func logWithDetails(_ message: String, level: OSLogType = .info, file: String = #file, function: String = #function, line: Int = #line) {
         let fileName = URL(fileURLWithPath: file).lastPathComponent
-        self.log("\(message) [\(fileName):\(line) - \(function)]")
+        self.log("[\(fileName):\(line) - \(function)]: \(message)")
     }
 }
 

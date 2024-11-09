@@ -91,20 +91,16 @@ class Tuner:ObservableObject{
         self.config = nil
     }
     
-    func startTunning(config: TonesConfig) -> Bool{
+    func startTunning(config: TonesConfig, volumeFilter:Double) -> Bool{
         logger.logWithDetails("Start to capture the audio from microphone.")
         self.config = config
-        let isStarted = toneEngine.startCapture(){ state, freq, volume  in
-            if freq > config.startFreq
-                && freq < config.endFreq
-                && volume > 40{
-                logger.logWithDetails("Got audio analysis state: \(state.rawValue) freq: \(freq), vol:\(volume)")
-                DispatchQueue.main.async {
-                    self.result = self.createTunningResult(by: state, freq: freq)
-                }
-            }else{
-                logger.logWithDetails("Got invalid audio freq: \(freq), vol:\(volume)")
+        let volumeFilter = volumeFilter - 80.0
+        let isStarted = toneEngine.startCapture(startFreq: config.startFreq, endFreq: config.endFreq, volumeLevel: Float(volumeFilter)){ state, freq, volume  in
+            logger.logWithDetails("Got audio analysis state: \(state.rawValue) freq: \(freq), volumeFilter:\(volume)")
+            DispatchQueue.main.async {
+                self.result = self.createTunningResult(by: state, freq: freq)
             }
+            
         }
         return isStarted
     }

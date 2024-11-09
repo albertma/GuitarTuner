@@ -68,7 +68,7 @@ struct ContentView: View {
 
 struct TuningPanelView: View {
     @ObservedObject private var tuner = Tuner()
-    @State private var sliderValue: Double = 0.0
+    @State private var volume: Double = 38.0
     @State private var isTuning = false  // 控制调音状态
     let currConfig = UkuleleTunerConfig()
     
@@ -90,34 +90,25 @@ struct TuningPanelView: View {
                     .frame(width: 300, height: 100)
 
             HStack{
-                Text("Current Freq: \(tuner.result.currentFrequence, specifier: "%.2f") Hz")
+                Text("Current Freq: \(tuner.result.currentFrequence, specifier: "%.2f") Hz，Target Freq:\(tuner.result.tone?.freq ?? 0.0, specifier: "%.2f") Hz")
                     .font(.system(size: 15))
                     .foregroundColor(.cyan)
                     .padding()
             }
+            // 控制指针位置的滑块
+            HStack{
+                Text("Volume Filter: \(volume, specifier: "%.2f")")
+                Slider(value: $volume, in: 0...160, step: 10)
+                    .padding().frame(width: 300)
+            }
             TuningButton(isTuning: $isTuning) { isTuning in
                 if(!isTuning){
-                    tuner.startTunning(config: currConfig)
+                    tuner.startTunning(config: currConfig, volumeFilter: volume)
                 }else{
                     tuner.stopTunning()
                 }
-            }
-//            HStack{
-//                Button("Start Tunning") {
-//                    tuner.startTunning(config: currConfig)
-//                }
-//                .padding()
-//                .frame(maxWidth: .infinity)
-//                .buttonBorderShape(ButtonBorderShape.roundedRectangle(radius: 12))
-//                
-//                Button("Stop Tunning") {
-//                    tuner.stopTunning()
-//                }
-//                .padding()
-//                .frame(maxWidth: .infinity)
-//                .buttonBorderShape(ButtonBorderShape.roundedRectangle(radius: 12))
-//                
-//            }
+            }.frame(maxWidth: 150)
+
         }
     }
 }
@@ -149,9 +140,9 @@ struct RulerView: View {
     @Binding var value: Double
 
     // 刻度范围和步长
-    let minValue = -150
-    let maxValue = 150
-    let step = 10
+    let minValue = -100
+    let maxValue = 100
+    let step = 5
 
     // 生成刻度数组
     var tickValues: [Int] {
@@ -182,7 +173,7 @@ struct RulerView: View {
             Rectangle()
                 .fill(Color.red)
                 .frame(width: 2, height: 40)
-                .offset(x: CGFloat((value - Double(minValue)) / Double(maxValue - minValue) * 300) - 150)
+                .offset(x: CGFloat((value - Double(minValue)) / Double(maxValue - minValue) * 200) - 100)
                 .animation(.easeInOut(duration: 0.5), value: value)
         }
     }
